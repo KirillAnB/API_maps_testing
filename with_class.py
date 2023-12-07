@@ -10,11 +10,9 @@ def get_joke():
     data = requests.get(base_url)
     yield data
 
-# def test_status_code(get_joke):
-#     assert get_joke.status_code == 200
 
 class Test_jokes():
-    def test_status_code(self,get_joke):
+    def test_status_code(self, get_joke):
         assert get_joke.status_code == 200
 
     def test_fields(self, get_joke):
