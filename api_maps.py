@@ -1,17 +1,8 @@
 import requests
 
 
-base_url = "https://rahulshettyacademy.com"  #base url
-auth_key = "?key=qaclick123"                 #key for methods
-
-class Pest_new_location():
-    """Maps api testing class"""
-    def test_post_new_location(self):
-        """New location create"""
-        post_resource = "/maps/api/place/add/json"
-        post_url = base_url + post_resource + auth_key
-        new_place_json_data = {
-            "location":{
+json_body_data = {
+    "location":{
                 "lat": -38.383494,
                 "lng": 33.427362
             },
@@ -26,11 +17,22 @@ class Pest_new_location():
             "website":"www.pussy.com",
             "language":"French-FN"
         }
-        result = requests.post(url = post_url, json=new_place_json_data)
-        new_place_id = result.json()["place_id"]
-        print(new_place_id)
 
-if __name__ == '__main__':
-    test_method = Pest_new_location()
-    test_method.test_post_new_location()
 
+
+def test_status_code(create_place):
+    assert create_place.status_code == 200
+
+def test_creation_status(create_place):
+    assert create_place.json().get("status") == 'OK'
+
+
+def test_if_created(create_place):
+    base_url = "https://rahulshettyacademy.com"
+    get_url_part = "/maps/api/place/get/json"
+    key = "?key=qaclick123"
+    place_id = create_place.json().get("place_id")
+    full_get_url = base_url + get_url_part + key + '&' + "place_id=" + place_id
+    get_result = requests.get(full_get_url)
+    for k in get_result.json():
+        assert k in json_body_data
