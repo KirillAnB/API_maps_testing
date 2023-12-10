@@ -1,3 +1,4 @@
+import pytest
 import requests
 
 
@@ -36,3 +37,37 @@ def test_if_created(create_place):
     get_result = requests.get(full_get_url)
     for k in get_result.json():
         assert k in json_body_data
+
+def test_put_method(create_place):
+    base_url = "https://rahulshettyacademy.com"
+    put_url_part = "/maps/api/place/update/json"
+    key = "?key=qaclick123"
+    full_put_url = base_url + put_url_part + key
+    print(full_put_url)
+    place_id = create_place.json().get('place_id')
+    print(place_id)
+    put_data = {
+        "place_id": place_id,
+        "address": "Lenina street 69",
+        'key': "qaclick123"
+    }
+    put_result = requests.put(url=full_put_url, json = put_data)
+    assert put_result.json().get("msg") == "Address successfully updated"
+
+
+@pytest.mark.bad_id
+def test_put_method_bad_id(create_place):
+    base_url = "https://rahulshettyacademy.com"
+    put_url_part = "/maps/api/place/update/json"
+    key = "?key=qaclick123"
+    full_put_url = base_url + put_url_part + key
+    print(full_put_url)
+    place_id = create_place.json().get('place_id')
+    print(place_id)
+    put_data = {
+        "place_id": "bad id",
+        "address": "Lenina street 69",
+        'key': "qaclick123"
+    }
+    put_result = requests.put(url=full_put_url, json = put_data)
+    assert put_result.json().get("msg") == "Update address operation failed, looks like the data doesn't exists"
