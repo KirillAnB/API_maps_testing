@@ -5,16 +5,11 @@ import requests
 base_url = "https://rahulshettyacademy.com"  #base url
 auth_key = "?key=qaclick123"                 #key for methods
 
-@pytest.fixture(params=["animal","career","celebrity","dev","explicit","fashion","food","history","money","movie",
-                        "music","political","religion","science","sport","travel"])
-def get_category(request):
-    category = request.param
-    return category
 
 @pytest.fixture
 def create_place():
     post_resource = "/maps/api/place/add/json"
-    get_part = "/maps/api/place/get/json"
+    # get_part = "/maps/api/place/get/json"
     post_url = base_url + post_resource + auth_key
     new_place_json_data = {
             "location":{
@@ -34,3 +29,9 @@ def create_place():
         }
     result = requests.post(url=post_url, json=new_place_json_data)
     yield result
+
+@pytest.fixture(params = ['location', 'accuracy', 'name', 'phone_number', 'address', 'types', 'website',
+                          'language'])
+def send_field(request):
+    """Sending field to check in the get response"""
+    return request.param
