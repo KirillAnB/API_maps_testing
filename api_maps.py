@@ -1,3 +1,4 @@
+import allure
 import pytest
 import requests
 
@@ -19,13 +20,17 @@ json_body_data = {
             "language":"French-FN"
         }
 
-
+@allure.severity("MINOR")
+@allure.link("www.ya.ru")
+@allure.title("Creating new place and checking status code in response")
+@allure.tag("Testing status code")
 
 def test_status_code(create_place):
     assert create_place.status_code == 200
 
 def test_creation_status(create_place):
-    assert create_place.json().get("status") == 'OK'
+    with allure.step(f"Create place and check status"):
+        assert create_place.json().get("status") == 'OK'
 
 
 def test_if_created(create_place):
@@ -108,3 +113,8 @@ def test_get_responce(create_place, send_field):
     get_result = requests.get(full_get_url)
     assert send_field in get_result.json()
 
+
+@pytest.mark.parametrize("answer", [41, 42, 43])
+@allure.title("checking for answer {answer}")
+def test_answers(answer):
+    assert answer == 42
